@@ -1,0 +1,60 @@
+# 지역코드가 B 인 자료에 대하여 (국어점수 + 영어점수)으로 내림차순 정렬했을 때 5번째 학번 출력하시오. 동일값 발생시 학번에 대한 오름차순 정렬하시오.
+def solveQuiz1(data):
+    #data = makeDataFromFile('.\data','Abc1115.csv')
+    #정렬의 대상을 저장할 리스트 선언(지역코드가 B인 학생)
+    quiz1Data = []
+    # data에 있는 요소를 하나씩 꺼내서 temp에 할당한다.
+    ##data는 2차원 배열 [][] temp 는 1차원 배열 []
+    ###즉, temp는 data안의 한 학생의 정보라고 보면 된다.
+    for temp in data:
+    #지역코드가 B인 데이터를 quiz1Data에 저장하시오.
+        # 지역코드가 B인지 확인한다.
+        if temp[10] == 'B':
+            ##temp 1차원 배열에 []이걸 사용하면 해당 인덱스의 요소(값)이 나온다,
+            # temp의 마지막에 국어+영어 점수를 추가한다.
+
+            ### temp.append를 하면 해당 리스트의 마지막 요소에 해당 데이터를 넣어준다.
+            temp.append(temp[2]+temp[3])  #학생의 데이터를 만든다
+            # quiz1Data의 마지막에 temp를 추가한다.
+            quiz1Data.append(temp) #학생들의 전체 데이터에 위의 학생 데이터를 추기한다.
+        pass
+
+    # 정렬 로직
+    # quiz1Data에 있는 요소에 대한 index(마지막 제외)[:-1]를 하나씩 꺼내서 index에 할당한다.
+    for index,_ in enumerate(quiz1Data[:-1]):
+        # quiz1Data에 있는 요소에 대한 index(위의 index에 +1)를 하나씩 꺼내서 idx에, 값은 value에 할당한다.
+        # enumerate = 해당 리스트를 순회하면서 모든 요소를 가져온다 idx에는 리스트의 인덱스를 반환하고 , value에는 헤당 리스트의 인덱스에 해당하는 요소를 반환한다
+        # idx는 0,1,2,3,4,......list ///// value =quiz1Data[index + 1] , value = quiz1Data[index + 2] ......
+        ###즉 , idx 는 현재 리스트의 위치(인덱스), value 는 현재 리스트의 요소(값)
+        for idx,value in enumerate(quiz1Data[index+1:]):    #------------
+            # 순서를 결정하는 자리에 있는 학생의 국어+영어
+            # 해당 인덱스에 해당하는 마지막 요소를 가져옴(=영어+국어 점수)
+            #quiz1Data는 2차원 배열이다 quiz1Data[index][-1] , 여기서 -1번째는 리스트의 마지막 요소를 가르킨다.
+            ### 즉, number은 quiz1Data의 해당 위치의 마지막 요소인 국어+영어 점수를 가르킨다!!
+            number = quiz1Data[index][-1]
+            # number가 비교하는 학생의 국어 + 영어 점수보다 작은지 확인한다.
+            ### number index의 위치의 점수와 value idx의 위치의 점수를 반복 비교한다
+            if number < value[-1]:
+                #number이 value보다 작다면 위치를 이동 시킴
+                #temp는 quiz1Data[index]의 정보를 임시 저장
+                temp = quiz1Data[index] #number / 순서 결정할 자리
+                quiz1Data[index] = value #i
+                #idx 내부 반복문의 반복횟수 + 내부 반복문의 시작점을 더해서 현재의 위치를 알아낸다
+                quiz1Data[idx+(index+1)] = temp
+                #break
+            #print(idx,i)
+            ### 만약 점수가 같다면~~
+            elif number == value[-1]:
+                # 점수가 같을 경우 학번을 오름차순으로 정렬하기
+                #여기서 number은 해당 index의 0번쨰위치 즉, 학번을 가지고온다
+                number = quiz1Data[index][0]
+                if number > value[0]: ## 여기서의  valu는 해당 idx의 학번을 가지고 오는 것이다.
+                    ##그래서 index의 학번과 idx의 학번을 비교하여 오름차순을 정리한다.
+                    temp = quiz1Data[index] #number
+                    quiz1Data[index] = value #i
+                    quiz1Data[idx+(index+1)] = temp
+                pass
+                
+            pass
+
+    return quiz1Data[4][0] #5번째 학생(index 4)의 학번(index 0) 정보
